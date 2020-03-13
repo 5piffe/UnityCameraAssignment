@@ -4,8 +4,8 @@
 public class PlayerController : MonoBehaviour
 {
 	#region binding IDs
-	private const string horizontal = "Horizontal";
-	private const string vertical = "Vertical";
+	private const string horizontalInput = "Horizontal";
+	private const string verticalInput = "Vertical";
 	#endregion binding IDs
 	
 	[Tooltip("The camera following this target")]
@@ -38,15 +38,15 @@ public class PlayerController : MonoBehaviour
 
 	void PlayerMovement()
 	{
-		moveDirection = transform.forward * Input.GetAxis(vertical) + transform.right * Input.GetAxis(horizontal);
+		moveDirection = transform.forward * Input.GetAxis(verticalInput) + transform.right * Input.GetAxis(horizontalInput);
 		moveDirection = moveDirection.normalized * walkSpeed;
 		characterController.Move(moveDirection * Time.deltaTime);
 
-		if (Input.GetAxis(horizontal) != 0 || Input.GetAxis(vertical) != 0)
+		if (Input.GetAxis(horizontalInput) != 0 || Input.GetAxis(verticalInput) != 0)
 		{
 			transform.rotation = Quaternion.Euler(0f, theCamera.rotation.eulerAngles.y, 0f);
-			Quaternion newRotation = Quaternion.LookRotation(new Vector3(moveDirection.x, 0f, moveDirection.z));
-			playerModel.transform.rotation = Quaternion.Slerp(playerModel.transform.rotation, newRotation, turnSpeed * Time.deltaTime);
+			Quaternion newDirection = Quaternion.LookRotation(new Vector3(moveDirection.x, 0f, moveDirection.z));
+			playerModel.transform.rotation = Quaternion.Slerp(playerModel.transform.rotation, newDirection, turnSpeed * Time.deltaTime);
 		}
 	}
 

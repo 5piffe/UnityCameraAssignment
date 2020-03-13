@@ -6,9 +6,12 @@ public class CameraController : MonoBehaviour
     private const string mouseXInput = "Mouse X";
     private const string mouseYInput = "Mouse Y";
     private const string zoomInput = "Mouse ScrollWheel";
-    #endregion binding IDs
+	private const string horizontalInput = "Horizontal";
+	private const string verticalInput = "Vertical";
+    private const string resetView = "Reset View";
+	#endregion binding IDs
 
-    [Header("Camera Preferences")]
+	[Header("Camera Preferences")]
     [Tooltip("Target to follow")] public GameObject cameraTarget;
 
     [SerializeField] private float horizontalSensitivity = 1.25f;
@@ -24,7 +27,7 @@ public class CameraController : MonoBehaviour
     [SerializeField, Range(0f, 90f)] private float maxLookUpAngle = 45f;
         
     [Header("Smoothing (lower = smoother camera).")]
-    [SerializeField, Range(2f, 40f)] private float smoothness = 12f;
+    [SerializeField, Range(2f, 40f)] private float smoothness = 14f;
     [SerializeField] private bool useSmoothing = true;
 
     private float cameraOffset;
@@ -32,7 +35,7 @@ public class CameraController : MonoBehaviour
     private float mouseY;
     private float zoom;
 
-	private void Awake()
+    private void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
         cameraOffset = Vector3.Distance(transform.position, cameraTarget.transform.position);
@@ -41,7 +44,7 @@ public class CameraController : MonoBehaviour
     private void Update()
     {
         CamerInput();
-    }
+	}
 
     private void LateUpdate()
     {
@@ -58,14 +61,11 @@ public class CameraController : MonoBehaviour
 		mouseY += (!invertY) ? Input.GetAxis(mouseYInput) * verticalSensitivity : Input.GetAxis(mouseYInput) * -verticalSensitivity;
 		mouseY = Mathf.Clamp(mouseY, -maxLookDownAngle, maxLookUpAngle);
 
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("setting camera behind player");
-            //transform.rotation = Quaternion.Euler(cameraTarget.transform.rotation.x, 0f, 0f);
-        }
-
-    }
+		if (Input.GetButton(resetView) && Input.GetAxis(horizontalInput) == 0f && Input.GetAxis(verticalInput) == 0f)
+		{
+            LookInPlayerDirection();
+		}
+	}
 
     private void CameraUpdate()
     {
@@ -73,7 +73,7 @@ public class CameraController : MonoBehaviour
 
         transform.position = (!useSmoothing) ? cameraTarget.transform.position - (transform.forward * (cameraOffset - zoom)) :
             Vector3.Slerp(transform.position, cameraTarget.transform.position - (transform.forward * (cameraOffset - zoom)), smoothness * Time.fixedDeltaTime);
-    }
+	}
 
     void ObstacleCheck()
     {
@@ -85,4 +85,10 @@ public class CameraController : MonoBehaviour
             transform.position = hit.point;
         }
 	}
+
+    void LookInPlayerDirection()
+    {
+        float cameraResetSpeed = 8f;
+        transform.rotation = Quaternion.Slerp(transform.rotation, cameraTarget.GetComponent<PlayerController>().playerModel.transform.rotation, cameraResetSpeed * Time.deltaTime);
+    }
 }
