@@ -37,18 +37,18 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+		Cursor.lockState = CursorLockMode.Locked;
         cameraOffset = Vector3.Distance(transform.position, cameraTarget.transform.position);
     }
 
     private void LateUpdate()
     {
-        CamerInput();
+        CameraInput();
         CameraUpdate();
         ObstacleCheck();
     }
 
-    private void CamerInput()
+    private void CameraInput()
     {
 		zoom += Input.GetAxis(zoomInput) * zoomSensitivity;
 		zoom = Mathf.Clamp(zoom, -maxZoomOut, cameraOffset);
