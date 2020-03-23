@@ -41,13 +41,9 @@ public class CameraController : MonoBehaviour
         cameraOffset = Vector3.Distance(transform.position, cameraTarget.transform.position);
     }
 
-    private void Update()
-    {
-        CamerInput();
-	}
-
     private void LateUpdate()
     {
+        CamerInput();
         CameraUpdate();
         ObstacleCheck();
     }
@@ -72,7 +68,7 @@ public class CameraController : MonoBehaviour
         transform.eulerAngles = new Vector3(-mouseY, transform.eulerAngles.y + mouseX, 0);
 
         transform.position = (!useSmoothing) ? cameraTarget.transform.position - (transform.forward * (cameraOffset - zoom)) :
-            Vector3.Slerp(transform.position, cameraTarget.transform.position - (transform.forward * (cameraOffset - zoom)), smoothness * Time.fixedDeltaTime);
+            Vector3.Slerp(transform.position, cameraTarget.transform.position - (transform.forward * (cameraOffset - zoom)), smoothness * Time.deltaTime);
 	}
 
     void ObstacleCheck()

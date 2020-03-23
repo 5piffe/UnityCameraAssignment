@@ -5806,7 +5806,7 @@ PrefabInstance:
     - target: {fileID: 8796250598795776189, guid: 72e319b64a83a9c47bb33d9091d16ffa,
         type: 3}
       propertyPath: useSmoothing
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8796250598795776189, guid: 72e319b64a83a9c47bb33d9091d16ffa,
         type: 3}
